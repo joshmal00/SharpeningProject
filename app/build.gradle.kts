@@ -62,4 +62,5 @@ dependencies {
     implementation (libs.retrofit)
     implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

@@ -6,23 +6,31 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel,
     modifier: Modifier
 ) {
     Box(
@@ -36,7 +44,12 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Banner()
-//                SearchBar()
+                SearchBar(
+                    query = viewModel.searchQuery.collectAsState().value,
+                    onQueryChange = { viewModel.onQueryChange(it) },
+                    onSearch = { viewModel.onSearch() },
+                    modifier = Modifier
+                )
             }
         }
     }
@@ -46,7 +59,8 @@ fun HomeScreen(
 fun Banner(
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .border(2.dp, Color.Red)
+        .height(100.dp)
+        .border(2.dp, Color(0xFF8B4513))
 ) {
     Box(
         modifier = modifier
@@ -54,11 +68,12 @@ fun Banner(
     ) {
         Text(
             text = "Old School HighScores",
-            modifier = Modifier.align(Alignment.TopCenter)
+            modifier = Modifier.align(Alignment.Center)
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier,
@@ -79,7 +94,19 @@ fun SearchBar(
                         contentDescription = "search"
                     )
                 }
-            }
+            },
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RectangleShape,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedTextColor = Color.White,
+                containerColor = Color.Black,
+                cursorColor = Color.White,
+                focusedTrailingIconColor = Color.White,
+                unfocusedTrailingIconColor = Color.White,
+                focusedIndicatorColor = Color.DarkGray,
+                unfocusedIndicatorColor = Color.DarkGray
+            )
         )
     }
 }

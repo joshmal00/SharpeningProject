@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -32,7 +36,7 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Banner()
-//                SearchBar() { }
+//                SearchBar()
             }
         }
     }
@@ -59,10 +63,23 @@ fun Banner(
 fun SearchBar(
     modifier: Modifier,
     query: String,
-    onQueryChance: (String) -> Unit,
+    onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
 ) {
-    Box() {
-//        TextField()
+    Box(modifier = Modifier) {
+        TextField(
+            value = query,
+            onValueChange = { onQueryChange(it) },
+            placeholder = { Text("Search") },
+            singleLine = true,
+            trailingIcon = {
+                IconButton(onClick = onSearch) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "search"
+                    )
+                }
+            }
+        )
     }
 }

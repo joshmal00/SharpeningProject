@@ -23,9 +23,9 @@ class HomeViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    fun getLeaders() {
+    fun getLeaders(table: Int, category: Int) {
         viewModelScope.launch {
-            val leaders = repository.getLeaders(0, 0, 10)
+            val leaders = repository.getLeaders(table, category, 50)
             if (leaders != null) {
                 _uiState.value = HomeUiState.Success(leaders)
             } else {

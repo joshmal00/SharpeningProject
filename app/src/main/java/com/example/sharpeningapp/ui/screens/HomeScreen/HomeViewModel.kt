@@ -1,11 +1,9 @@
-package com.example.sharpeningapp.ui.screens
+package com.example.sharpeningapp.ui.screens.HomeScreen
 
 
 import android.util.Log
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.example.sharpeningapp.data.HighScoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

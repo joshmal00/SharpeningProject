@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.sharpeningapp.ui.screens.HomeScreen
-import com.example.sharpeningapp.ui.screens.HomeViewModel
+import com.example.sharpeningapp.ui.screens.HomeScreen.HomeScreen
+import com.example.sharpeningapp.ui.screens.HomeScreen.HomeViewModel
 import com.example.sharpeningapp.ui.theme.SharpeningAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

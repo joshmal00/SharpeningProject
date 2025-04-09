@@ -1,10 +1,9 @@
-package com.example.sharpeningapp.ui.screens
+package com.example.sharpeningapp.ui.screens.HomeScreen
 
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

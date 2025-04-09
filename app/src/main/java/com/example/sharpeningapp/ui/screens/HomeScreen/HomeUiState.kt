@@ -1,4 +1,4 @@
-package com.example.sharpeningapp.ui.screens
+package com.example.sharpeningapp.ui.screens.HomeScreen
 
 import com.example.sharpeningapp.network.Ranking
 

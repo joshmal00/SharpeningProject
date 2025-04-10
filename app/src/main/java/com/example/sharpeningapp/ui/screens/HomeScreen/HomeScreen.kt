@@ -36,10 +36,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.sharpeningapp.ui.components.Banner
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
     modifier: Modifier
 ) {
     LaunchedEffect(Unit) {
@@ -69,23 +71,6 @@ fun HomeScreen(
                     modifier = Modifier
                 )
             }
-    }
-}
-
-@Composable
-fun Banner(
-    modifier: Modifier = Modifier
-        .fillMaxWidth()
-        .height(50.dp)
-) {
-    Box(
-        modifier = modifier
-            .padding(8.dp)
-    ) {
-        Text(
-            text = "Old School HighScores",
-            modifier = Modifier.align(Alignment.Center)
-        )
     }
 }
 

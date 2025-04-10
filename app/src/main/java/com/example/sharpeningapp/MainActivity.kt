@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.example.sharpeningapp.ui.screens.DetailsScreen.DetailsScreen
 import com.example.sharpeningapp.ui.screens.HomeScreen.HomeScreen
 import com.example.sharpeningapp.ui.screens.HomeScreen.HomeViewModel
 import com.example.sharpeningapp.ui.theme.SharpeningAppTheme
@@ -19,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: HomeViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,8 +30,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .windowInsetsPadding(WindowInsets.systemBars)
                 ) { innerPadding ->
-                    HomeScreen(
-                        viewModel = viewModel,
+                    DetailsScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)

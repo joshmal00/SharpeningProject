@@ -20,9 +20,13 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    private val _lastFetch = MutableStateFlow<QueryState>(QueryState())
+    val lastFetch: StateFlow<QueryState> = _lastFetch.asStateFlow()
 
     fun getLeaders(table: Int, category: Int) {
         viewModelScope.launch {
+            _uiState.value = HomeUiState.Loading
+            _lastFetch.value = QueryState(table, category)
             val leaders = repository.getLeaders(table, category, 50)
             if (leaders != null) {
                 _uiState.value = HomeUiState.Success(leaders)
@@ -32,16 +36,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onRetryLoad(QueryState: QueryState = lastFetch.value) {
+        getLeaders(QueryState.table, QueryState.category)
+    }
+
     fun onQueryChange(query: String) {
         _searchQuery.value = query
     }
-
-    fun onSearch() {
-        val query = _searchQuery.value
-        if (query.isNotBlank()) {
-            Log.i("!@#$", "mock navigation to details screen")
-        }
-    }
-
-
 }

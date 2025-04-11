@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.example.sharpeningapp.navigation.AppNavHost
 import com.example.sharpeningapp.ui.screens.DetailsScreen.DetailsScreen
 import com.example.sharpeningapp.ui.screens.HomeScreen.HomeScreen
 import com.example.sharpeningapp.ui.screens.HomeScreen.HomeViewModel
@@ -25,17 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SharpeningAppTheme {
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .windowInsetsPadding(WindowInsets.systemBars)
-                ) { innerPadding ->
-                    DetailsScreen(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    )
-                }
+                AppNavHost()
             }
         }
     }

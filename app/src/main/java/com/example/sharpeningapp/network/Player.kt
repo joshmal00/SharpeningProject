@@ -15,7 +15,7 @@ data class Skill(
     val name: String,
     val rank: Int,
     val level: Int,
-    val xp: Int,
+    val xp: Long,
 )
 
 @Serializable

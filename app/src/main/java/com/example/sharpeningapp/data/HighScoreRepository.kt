@@ -24,18 +24,23 @@ class HighScoreRepository(
         }
     }
 
-    suspend fun getPlayerScores(username: String): Player? {
+    suspend fun getPlayerScores(username: String): PlayerResult {
         try {
             val response = service.getPlayerScores(username)
             if (response.isSuccessful) {
-                return response.body()
+                val player = response.body()
+                if (player != null) {
+                    return PlayerResult.Success(player)
+                } else {
+                    return PlayerResult.ApiError(response.code(), "Player not found")
+                }
             } else {
-                Log.e("API_ERROR", "Error retrieving player information: ${response.code()}")
-                return null
+                return PlayerResult.ApiError(response.code(),  "Player not found")
             }
         } catch (e: IOException) {
-            Log.e("NETWORK_ERROR", "Network Error: ${e.message}")
-            return null
+            return PlayerResult.NetworkError(
+                if (e.message == null) "Network Error" else "Network Error: ${e.message}"
+            )
         }
     }
 }

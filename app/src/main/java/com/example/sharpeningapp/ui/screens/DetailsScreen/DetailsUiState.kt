@@ -6,6 +6,8 @@ sealed interface DetailsUiState {
     data class Success(
         val player: Player
     ) : DetailsUiState
-    object Error: DetailsUiState
+    data class Error(
+        val errorMessage: String
+    ): DetailsUiState
     object Loading: DetailsUiState
 }

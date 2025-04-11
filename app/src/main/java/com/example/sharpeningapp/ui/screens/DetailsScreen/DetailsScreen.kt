@@ -5,10 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,7 +20,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -36,16 +36,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharpeningapp.network.Activity
 import com.example.sharpeningapp.network.Skill
 import com.example.sharpeningapp.ui.components.Banner
+import com.example.sharpeningapp.ui.components.ErrorScreen
 
 @Composable
 fun DetailsScreen(
     viewModel: DetailsViewModel = hiltViewModel(),
-    modifier: Modifier
+    modifier: Modifier,
+    playerName: String,
+    onNavigateBack: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-        viewModel.getPlayer("swaybabyj")
+        viewModel.getPlayer(playerName)
     }
     Scaffold(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.systemBars),
         bottomBar = {
             NavigationBar(
                 containerColor = Color.Black,
@@ -88,7 +93,11 @@ fun DetailsScreen(
                 .padding(innerPadding),
         ) {
             Column() {
-                Banner(text = "Player Name")
+                Banner(
+                    title = playerName,
+                    subText = "Home",
+                    onSubTextClick = onNavigateBack,
+                )
                 PlayerScoresCard(
                     viewModel = viewModel,
                     modifier = Modifier
@@ -119,7 +128,10 @@ fun PlayerScoresCard(
                 }
             }
             is DetailsUiState.Error -> {
-                Text("Error: Could not load data")
+                ErrorScreen(
+                    onRetry = { viewModel.onRetryLoad() },
+                    message = uiState.errorMessage
+                )
             }
             is DetailsUiState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

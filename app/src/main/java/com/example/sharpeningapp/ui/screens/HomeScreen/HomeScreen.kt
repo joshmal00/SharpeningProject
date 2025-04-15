@@ -51,9 +51,6 @@ fun HomeScreen(
     modifier: Modifier,
     onNavigateToDetails: (String) -> Unit
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getLeaders(0,0)
-    }
     Scaffold(
         modifier = Modifier
             .fillMaxSize()

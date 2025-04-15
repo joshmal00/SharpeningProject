@@ -41,6 +41,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun onRetryLoad(username: String = _currentUsername.value) {
+        _uiState.value = DetailsUiState.Loading
         getPlayer(username)
     }
 

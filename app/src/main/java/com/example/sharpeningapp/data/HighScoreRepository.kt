@@ -2,13 +2,39 @@ package com.example.sharpeningapp.data
 
 import android.util.Log
 import com.example.sharpeningapp.network.HighScoreApiService
-import com.example.sharpeningapp.network.Player
 import com.example.sharpeningapp.network.Ranking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import okio.IOException
 
 class HighScoreRepository(
+    private val dao: LeadersDao,
     private val service: HighScoreApiService
 ) {
+
+    val top50: Flow<List<LeaderEntity>> = dao.getLeaders()
+
+    suspend fun updateLeaders() {
+        val result = getLeaders(0,0,50)
+        if (result != null) {
+            val leaderEntities = result.map {
+                LeaderEntity(
+                    it.name,
+                    it.rank,
+                    it.score
+                )
+            }
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.clearAll()
+                dao.insertAll(leaderEntities)
+            }
+        } else {
+            throw Exception("Failed to refresh leaders")
+        }
+    }
+
     suspend fun getLeaders(table: Int, category: Int, size: Int): List<Ranking>? {
         try {
             val response = service.getLeaders(table, category, size)

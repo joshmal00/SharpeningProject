@@ -1,5 +1,6 @@
 package com.example.sharpeningapp.ui.screens.HomeScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,9 +19,11 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -52,6 +55,14 @@ fun HomeScreen(
     onNavigateToDetails: (String) -> Unit
 ) {
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { Log.i("!@#$", "FAB clicked") },
+                containerColor = Color.Black,
+                contentColor = Color.White) {
+                Icon(imageVector = Icons.Default.Email, contentDescription = "email")
+            }
+        },
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)

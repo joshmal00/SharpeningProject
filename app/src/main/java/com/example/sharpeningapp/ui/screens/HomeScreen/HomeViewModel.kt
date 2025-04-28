@@ -25,6 +25,14 @@ class HomeViewModel @Inject constructor(
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
     private val _lastFetch = MutableStateFlow<QueryState>(QueryState())
     val lastFetch: StateFlow<QueryState> = _lastFetch.asStateFlow()
+    private val _showBottomSheet = MutableStateFlow(false)
+    val showBottomSheet: StateFlow<Boolean> = _showBottomSheet.asStateFlow()
+    private val _subject = MutableStateFlow("")
+    val subject: StateFlow<String> = _subject.asStateFlow()
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String> = _message.asStateFlow()
+    private val _sendEmailEvent = MutableStateFlow(false)
+    val sendEmailEvent: StateFlow<Boolean> = _sendEmailEvent.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -79,5 +87,25 @@ class HomeViewModel @Inject constructor(
 
     fun onQueryChange(query: String) {
         _searchQuery.value = query
+    }
+
+    fun toggleBottomSheet() {
+        _showBottomSheet.value = !_showBottomSheet.value
+    }
+
+    fun onSubjectChange(subject: String) {
+        _subject.value = subject
+    }
+
+    fun onMessageChange(message: String) {
+        _message.value = message
+    }
+
+    fun onRequestEmailSend() {
+        _sendEmailEvent.value = true
+    }
+
+    fun onSendEmailHandled() {
+        _sendEmailEvent.value = false
     }
 }

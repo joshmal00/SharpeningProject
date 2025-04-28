@@ -1,5 +1,6 @@
 package com.example.sharpeningapp.ui.screens.HomeScreen
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,9 +9,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -18,17 +23,23 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -40,6 +51,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,6 +61,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.sharpeningapp.network.Ranking
 import com.example.sharpeningapp.ui.components.Banner
 import com.example.sharpeningapp.ui.components.ErrorScreen
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun HomeScreen(
@@ -57,7 +72,7 @@ fun HomeScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { Log.i("!@#$", "FAB clicked") },
+                onClick = { viewModel.toggleBottomSheet() },
                 containerColor = Color.Black,
                 contentColor = Color.White) {
                 Icon(imageVector = Icons.Default.Email, contentDescription = "email")
@@ -73,6 +88,12 @@ fun HomeScreen(
                 .background(Color.Black)
                 .padding(innerPadding)
         ) {
+            if (viewModel.showBottomSheet.collectAsState().value) {
+                EmailBottomSheet(
+                    viewModel = viewModel,
+                    onDismiss = { viewModel.toggleBottomSheet() }
+                )
+            }
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -241,6 +262,100 @@ fun LeaderBoardGrid(
                         textAlign = TextAlign.Start
                     )
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EmailBottomSheet(
+    viewModel: HomeViewModel,
+    onDismiss: () -> Unit,
+) {
+    val context = LocalContext.current
+    val sendEmailEvent = viewModel.sendEmailEvent.collectAsState().value
+
+    LaunchedEffect(sendEmailEvent) {
+        if (sendEmailEvent) {
+            val subject = viewModel.subject.first()
+            val message = viewModel.message.first()
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "message/rfc822"
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("oldschoolhighscores.email.com"))
+                putExtra(Intent.EXTRA_SUBJECT, subject)
+                putExtra(Intent.EXTRA_TEXT, message)
+            }
+
+            val chooser = Intent.createChooser(intent, "Send email via...")
+            if (intent.resolveActivity(context.packageManager) != null) {
+                context.startActivity(chooser)
+            }
+            viewModel.onSendEmailHandled()
+        }
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() },
+        sheetState = SheetState(
+            skipPartiallyExpanded = true,
+            density = LocalDensity.current
+        ),
+        modifier = Modifier
+            .height((LocalConfiguration.current.screenHeightDp.dp) * 0.8f )
+
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .imePadding()
+                .padding(16.dp)
+        ) {
+            Text(
+                "Send Email",
+                color = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = viewModel.subject.collectAsState().value,
+                onValueChange = { viewModel.onSubjectChange(it) },
+                placeholder = { Text("subject") },
+                singleLine = true,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = viewModel.message.collectAsState().value,
+                onValueChange = { viewModel.onMessageChange(it) },
+                placeholder = { Text("message") },
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            )
+
+            Button(
+                onClick = { viewModel.onRequestEmailSend() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
+            ) {
+                Text("Send")
             }
         }
     }
